@@ -8,13 +8,18 @@ langchain
 langchain-openai
 langchain-community
 langgraph
+langchain-pinecone
 
 # Vector Store
-pinecone-client
+pinecone
 
 # Document Processing
 pypdf
 python-multipart
 
 # Utilities
-dotenv
+python-dotenv
+requests
+
+# Frontend
+streamlit

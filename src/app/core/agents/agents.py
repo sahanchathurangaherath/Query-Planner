@@ -67,23 +67,24 @@ def retrieval_node(state: QAState) -> dict:
     
     print(f"\n🔍 RETRIEVAL AGENT: Searching for information...")
     
-    # Build enhanced query
-    enhanced_query = f"Question: {question}"
+    # Strategy 1: Search with original question
+    print(f"   → Searching with original question...")
+    context_parts = [retrieval_tool.invoke({"query": question})]
     
-    if plan:
-        enhanced_query += f"\n\nSearch Plan: {plan}"
+    # Strategy 2: Search with each sub-question (if planning generated them)
+    if sub_questions and len(sub_questions) > 0:
+        print(f"   → Searching with {len(sub_questions)} sub-questions...")
+        for i, sub_q in enumerate(sub_questions[:3]):  # Limit to 3 for efficiency
+            print(f"      • Sub-question {i+1}: {sub_q[:50]}...")
+            result = retrieval_tool.invoke({"query": sub_q})
+            context_parts.append(result)
     
-    if sub_questions:
-        enhanced_query += "\n\nSub-Questions to address:"
-        for sq in sub_questions:
-            enhanced_query += f"\n- {sq}"
+    # Combine all context
+    combined_context = "\n\n" + "="*60 + "\n\n".join(context_parts)
     
-    print(f"Enhanced query:\n{enhanced_query}\n")
+    print(f"✅ Retrieved context from {len(context_parts)} search(es)")
     
-    # Call retrieval tool (placeholder for now)
-    context = retrieval_tool.invoke({"query": enhanced_query})
-    
-    return {"context": context}
+    return {"context": combined_context}
 
 
 def summarization_node(state: QAState) -> dict:

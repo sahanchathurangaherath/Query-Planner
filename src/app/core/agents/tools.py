@@ -1,7 +1,8 @@
 """Tools for agents to use."""
 
 from langchain_core.tools import tool
-from typing import List
+from ..retrieval.vector_store import vector_store_manager
+from ..retrieval.serialization import serialize_chunks_with_ids
 
 
 @tool
@@ -15,6 +16,13 @@ def retrieval_tool(query: str) -> str:
     Returns:
         Relevant context from the database
     """
-    # TODO: This will connect to Pinecone in the next phase
-    # For now, return a placeholder
-    return f"[Placeholder] Results for query: {query}"
+    # Search Pinecone
+    results = vector_store_manager.search(query, k=5)
+    
+    if not results:
+        return "No relevant information found in the database."
+    
+    # Serialize results
+    formatted_context, citation_map = serialize_chunks_with_ids(results)
+    
+    return formatted_context

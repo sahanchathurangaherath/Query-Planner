@@ -1,103 +1,99 @@
-"""Vector store management with Pinecone."""
+"""
+Pinecone vector store with FREE Gemini embeddings.
+Real cloud database with zero embedding costs!
+"""
 
 from pinecone import Pinecone
-from langchain_openai import OpenAIEmbeddings
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_pinecone import PineconeVectorStore
-from langchain_community.document_loaders import PyPDFLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-import os
-from typing import List
 from langchain_core.documents import Document
+from typing import List
+import os
 
 
-class VectorStoreManager:
-    """Manages Pinecone vector store operations."""
+class PineconeVectorStoreManager:
+    """Manages Pinecone vector store with Gemini embeddings."""
     
     def __init__(self):
-        """Initialize Pinecone and embeddings."""
+        """Initialize Pinecone connection with Gemini embeddings."""
+        print("\n🔄 Initializing Pinecone vector store...")
+        
+        # Initialize Pinecone
         self.pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
         self.index_name = os.getenv("PINECONE_INDEX_NAME", "ikms-rag")
-        self.embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
         
-        # Initialize vector store
+        # Use FREE Gemini embeddings
+        print("💡 Using FREE Google Gemini embeddings!")
+        self.embeddings = GoogleGenerativeAIEmbeddings(
+            model="models/text-embedding-004",
+            google_api_key=os.getenv("GOOGLE_API_KEY")
+        )
+        
+        # Connect to Pinecone index
         self.vector_store = PineconeVectorStore(
             index_name=self.index_name,
             embedding=self.embeddings
         )
-
-        print(f" Connected to Pinecone index: {self.index_name}")
-
-    def index_pdf(self, pdf_path: str) -> dict:
-        """
-        Load a PDF, split into chunks, and index in Pinecone.
         
-        Args:
-            pdf_path: Path to PDF file
-            
-        Returns:
-            dict with indexing stats
-        """
-        print(f"\n Loading PDF: {pdf_path}")
+        # Get index stats
+        index = self.pc.Index(self.index_name)
+        stats = index.describe_index_stats()
+        total_vectors = stats.get("total_vector_count", 0)
         
-        # Load PDF
-        loader = PyPDFLoader(pdf_path)
-        documents = loader.load()
+        print(f"✅ Connected to Pinecone index: {self.index_name}")
+        print(f"📊 Total vectors in index: {total_vectors}")
         
-        print(f" Loaded {len(documents)} pages")
+        if total_vectors == 0:
+            print("⚠️  Index is empty. Run setup script to add documents.")
         
-        # Split into chunks
-        text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=1000,
-            chunk_overlap=200,
-            separators=["\n\n", "\n", ". ", " ", ""]
-        )
-        
-        chunks = text_splitter.split_documents(documents)
-        print(f"Split into {len(chunks)} chunks")
-        
-        # Add to vector store
-        print(f" Indexing chunks in Pinecone...")
-        self.vector_store.add_documents(chunks)
-        
-        print(f"Indexed {len(chunks)} chunks successfully!")
-        
-        return {
-            "pages": len(documents),
-            "chunks": len(chunks),
-            "status": "success"
-        }
+        print(f"💰 Embedding cost: $0.00 (Gemini free tier!)\n")
     
-    def search(self, query: str, k: int = 5) -> List[Document]:
+    def search(self, query: str, k: int = 4) -> List[Document]:
         """
-        Search for relevant chunks.
+        Semantic search in Pinecone using Gemini embeddings.
         
         Args:
             query: Search query
-            k: Number of results to return
+            k: Number of results
             
         Returns:
             List of relevant documents
         """
-        print(f" Searching for: {query[:50]}...")
+        print(f"🔍 Searching Pinecone for: {query[:60]}...")
         
         results = self.vector_store.similarity_search(query, k=k)
         
-        print(f" Found {len(results)} results")
+        print(f"✅ Found {len(results)} relevant documents from Pinecone")
         
         return results
     
-    def get_retriever(self, k: int = 5):
+    def add_documents(self, documents: List[Document]):
         """
-        Get a LangChain retriever.
+        Add documents to Pinecone (with FREE Gemini embeddings).
         
         Args:
-            k: Number of results to return
-            
-        Returns:
-            LangChain retriever
+            documents: List of documents to index
         """
+        print(f"📤 Adding {len(documents)} documents to Pinecone...")
+        print("🔄 Generating embeddings with Gemini (FREE)...")
+        
+        self.vector_store.add_documents(documents)
+        
+        print(f"✅ Successfully indexed {len(documents)} documents!")
+        print(f"💰 Cost: $0.00 (Gemini embeddings are free!)")
+    
+    def get_retriever(self, k: int = 4):
+        """Get LangChain retriever interface."""
         return self.vector_store.as_retriever(search_kwargs={"k": k})
 
 
-# Global instance
-vector_store_manager = VectorStoreManager()
+# Initialize global instance
+print("\n" + "="*60)
+print("🚀 Starting IKMS Query Planner - Feature 1")
+print("="*60)
+
+vector_store_manager = PineconeVectorStoreManager()
+
+print("="*60)
+print("✅ System ready for queries!")
+print("="*60 + "\n")

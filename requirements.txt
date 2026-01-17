@@ -9,7 +9,7 @@ langchain-openai
 langchain-community
 langgraph
 langchain-pinecone
-
+langchain-ollama
 # Vector Store
 pinecone
 

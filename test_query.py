@@ -40,7 +40,7 @@ def ask_question(question: str, api_url: str = "http://localhost:8000"):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python test_query.py 'Your question here'")
+        print("Usage: python test_query.py 'What are the advantages of vector databases compared to traditional databases, and how do they handle scalability?'")
         sys.exit(1)
     
     ask_question(" ".join(sys.argv[1:]))

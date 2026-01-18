@@ -2,10 +2,6 @@
 ONE-TIME SETUP: Index a PDF into Pinecone with FREE Gemini embeddings.
 Run this ONCE to add your documents to the vector database.
 
-Usage:
-    python scripts/setup_pinecone.py path/to/your/document.pdf
-    
-Cost: $0.00 (Gemini embeddings are FREE!)
 """
 
 from pinecone import Pinecone

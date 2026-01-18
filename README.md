@@ -56,10 +56,10 @@ User Question
      ├─ Query 3: Sub-question 2 → Pinecone
      └─ Query 4: Sub-question 3 → Pinecone
      ↓
-✍️ Summarization Agent (Gemini 1.5 Flash)
+✍️ Summarization Agent 
      └─ Generates comprehensive answer
      ↓
-✅ Verification Agent (Gemini 1.5 Flash)
+✅ Verification Agent 
      └─ Validates quality
      ↓
 Final Answer

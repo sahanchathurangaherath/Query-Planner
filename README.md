@@ -1,10 +1,10 @@
-# IKMS Query Planner - Feature 1: Query Planning & Decomposition Agent
+# IKMS Query Planner -  Query Planning & Decomposition Agent
 
 An intelligent Multi-Agent RAG system that uses AI-powered query planning to break down complex questions into focused sub-queries for comprehensive answers. Built with Google Gemini (free tier) and Pinecone vector database.
 
 ---
 
-## 🎯 Feature 1: Query Planning & Decomposition
+## 🎯  Query Planning & Decomposition
 
 ### Problem
 Traditional RAG systems perform a single retrieval call with the entire user question, often missing important aspects of complex, multi-part queries.
@@ -82,8 +82,8 @@ Final Answer
 ## 📋 Prerequisites
 
 - Python 3.10+
-- Google Gemini API key (FREE)
-- Pinecone API key (FREE tier available)
+- Google Gemini API key 
+- Pinecone API key 
 
 ---
 
@@ -304,7 +304,7 @@ ikms-query-planner/
 
 ### 1. Ask Questions
 
-![Frontend Screenshot - Question Input]
+
 
 - Type your question in the text area
 - Or click an example question from the sidebar
@@ -455,18 +455,7 @@ lsof -ti:8000 | xargs kill -9
 
 ---
 
-## 📊 Feature 1 Acceptance Criteria
 
-| Criteria | Status | Evidence |
-|----------|--------|----------|
-| Complex questions trigger planning step | ✅ | Visible in logs and Planning tab |
-| Sub-questions generated | ✅ | 2-5 sub-questions per complex query |
-| Multiple retrieval calls | ✅ | Logs show N searches (1 + sub-questions) |
-| Enhanced state tracking | ✅ | `plan` and `sub_questions` in QAState |
-| API exposes planning info | ✅ | Response includes plan & sub_questions |
-| UI displays planning process | ✅ | Planning tab shows full breakdown |
-
----
 
 ## 🎓 Learning Outcomes
 

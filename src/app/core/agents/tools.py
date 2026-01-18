@@ -16,7 +16,7 @@ def retrieval_tool(query: str) -> str:
     Returns:
         Relevant context from Pinecone
     """
-    print(f"🔍 Searching Pinecone for: {query[:60]}...")
+    print(f" Searching Pinecone for: {query[:60]}...")
     
     # Semantic search in Pinecone
     results = vector_store_manager.search(query, k=4)

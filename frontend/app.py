@@ -9,7 +9,7 @@ import time
 
 API_URL = "http://localhost:8000"
 
-# ---------------- Page Config ----------------
+#  Page Config 
 st.set_page_config(
     page_title="IKMS Query Planner",
     page_icon="🧠",
@@ -94,17 +94,8 @@ Pipeline:
 
     st.divider()
 
-    st.subheader("💡 Example Questions")
-    examples = [
-        "What are vector databases?",
-        "Vector databases vs relational databases",
-        "Advantages of vector databases and scalability"
-    ]
-    for q in examples:
-        if st.button(q, use_container_width=True):
-            st.session_state.question = q
-
-# ---------------- Input ----------------
+    
+# Input 
 question = st.text_area(
     "❓ Ask a Question",
     value=st.session_state.get("question", ""),
@@ -133,14 +124,14 @@ if st.button("🚀 Run Query", type="primary"):
     data = res.json()
     st.success(f"Completed in {elapsed:.1f}s")
 
-    # ---------------- Answer ----------------
+    #  Answer
     st.markdown("### ✅ Final Answer")
     st.markdown(
         f'<div class="box answer">{data.get("answer","No answer")}</div>',
         unsafe_allow_html=True
     )
 
-    # ---------------- Planning ----------------
+    # Planning 
     st.markdown("### 🧠 Query Planning")
 
     if data.get("plan"):
@@ -159,16 +150,13 @@ if st.button("🚀 Run Query", type="primary"):
                 unsafe_allow_html=True
             )
 
-    # ---------------- Context ----------------
+    # Context 
     if data.get("context"):
         with st.expander("📚 Retrieved Context"):
             st.text(data["context"])
 
-    # ---------------- Raw JSON ----------------
-    with st.expander("📄 API Response"):
-        st.json(data)
 
-# ---------------- Footer ----------------
+# Footer 
 st.markdown(
     "<center style='color:#888'>IKMS • Query Planning & Decomposition</center>",
     unsafe_allow_html=True

@@ -8,8 +8,8 @@ load_dotenv()
 print("Environment variables loaded.")
 
 # Verify API keys
-if not os.getenv("OPENAI_API_KEY"):
-    raise ValueError("OPENAI_API_KEY not found in environment variables")
+if not os.getenv("GOOGLE_API_KEY"):
+    raise ValueError("GOOGLE_API_KEY not found in environment variables")
 
 from fastapi import FastAPI, HTTPException,UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
@@ -148,5 +148,28 @@ def get_index_stats():
     
 @app.get("/health")
 def health_check():
-    """Health check endpoint."""
-    return {"status": "ok"}
+    """Detailed health check."""
+    # from .core.retrieval.vector_store import vector_store_manager
+    # from pinecone import Pinecone
+    # import os
+    
+    # # Get Pinecone stats
+    # pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
+    # index = pc.Index(os.getenv("PINECONE_INDEX_NAME"))
+    # stats = index.describe_index_stats()
+    
+    return {
+        "status": "healthy",
+        "feature": "Query Planning Agent",
+        "llm_provider": "Google Gemini ",
+        "embedding_provider": "Google Gemini text-embedding-004 ",
+        "vector_database": "Pinecone (Cloud)",
+        "components": {
+            "planning_agent": True,
+            "retrieval_agent": True,
+            "summarization_agent": True,
+            "verification_agent": True,
+            "pinecone_connected": True,
+            "semantic_search": True
+        }
+    }

@@ -46,14 +46,32 @@ You can call the tool multiple times with different query variations to get comp
 """
 
 
-SUMMARIZATION_PROMPT = """You are a Summarization Agent. Create a clear, accurate answer based on the retrieved context.
+# SUMMARIZATION_PROMPT = """You are a Summarization Agent. Create a clear, accurate answer based on the retrieved context.
+
+# Guidelines:
+# - Only use information from the provided context
+# - Be concise but comprehensive
+# - If the context doesn't contain enough information, say so
+# - Cite specific details when possible
+# """
+SUMMARIZATION_PROMPT = """You are an AI assistant that creates clear, comprehensive answers based on retrieved context.
+
+Your task:
+- Read the question carefully
+- Use ONLY information from the provided context
+- Create a well-structured, direct answer
+- Be accurate and complete
+- Write naturally - avoid phrases like "based on the context" or "according to the documents"
 
 Guidelines:
-- Only use information from the provided context
-- Be concise but comprehensive
-- If the context doesn't contain enough information, say so
-- Cite specific details when possible
-"""
+- Start answering immediately (no preamble)
+- Organize information logically
+- Be concise but thorough
+- If context is insufficient, acknowledge limitations
+- Use examples from context when helpful
+
+Generate your answer now:"""
+
 
 
 VERIFICATION_PROMPT = """You are a Verification Agent. Review the answer for accuracy and completeness.

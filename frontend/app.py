@@ -1,272 +1,175 @@
 """
-Streamlit Frontend for IKMS Query Planner
+IKMS Query Planner UI
 Feature 1: Query Planning & Decomposition Agent
 """
 
 import streamlit as st
 import requests
-import json
-from datetime import datetime
+import time
 
-# Configuration
 API_URL = "http://localhost:8000"
 
-# Page config
+# ---------------- Page Config ----------------
 st.set_page_config(
     page_title="IKMS Query Planner",
     page_icon="🧠",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    layout="wide"
 )
 
-# Custom CSS
+# Styles 
 st.markdown("""
-    <style>
-    .main-header {
-        font-size: 3rem;
-        font-weight: bold;
-        color: #1f77b4;
-        text-align: center;
-        margin-bottom: 1rem;
-    }
-    .sub-header {
-        font-size: 1.2rem;
-        color: #666;
-        text-align: center;
-        margin-bottom: 2rem;
-    }
-    .plan-box {
-        background-color: #f0f8ff;
-        padding: 1.5rem;
-        border-radius: 10px;
-        border-left: 5px solid #1f77b4;
-        margin: 1rem 0;
-    }
-    .sub-question {
-        background-color: #fff4e6;
-        padding: 0.8rem;
-        border-radius: 5px;
-        margin: 0.5rem 0;
-        border-left: 3px solid #ff9800;
-    }
-    .answer-box {
-        background-color: #f0fff4;
-        padding: 1.5rem;
-        border-radius: 10px;
-        border-left: 5px solid #4caf50;
-        margin: 1rem 0;
-    }
-    .context-box {
-        background-color: #fafafa;
-        padding: 1rem;
-        border-radius: 5px;
-        border: 1px solid #ddd;
-        max-height: 400px;
-        overflow-y: auto;
-    }
-    .metric-card {
-        background-color: #ffffff;
-        padding: 1rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        text-align: center;
-    }
-    </style>
+<style>
+.header {
+    font-size: 2.4rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.sub {
+    text-align: center;
+    color: #9ca3af;   /* better for dark mode */
+    margin-bottom: 1.5rem;
+}
+
+.box {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+
+.plan {
+    background: #102a43;
+    color: #e3f2fd;          
+    border-left: 4px solid #1f77b4;
+}
+
+
+.answer {
+    background: #f0fff4;
+    color: #1b1b1b;          
+    border-left: 4px solid #2e7d32;
+}
+
+/* 🔍 Sub-Questions */
+.subq {
+    background: #fff4e6;
+    color: #3e2723;          /* ✅ ADD THIS */
+    border-left: 3px solid #ff9800;
+}
+</style>
+
 """, unsafe_allow_html=True)
 
-# Header
-st.markdown('<div class="main-header">🧠 IKMS Query Planner</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-header">Multi-Agent RAG with Intelligent Query Decomposition</div>', unsafe_allow_html=True)
+# ---------------- Header ----------------
+st.markdown('<div class="header">🧠 IKMS Query Planner</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub">Multi-Agent RAG with Query Planning</div>', unsafe_allow_html=True)
 
-# Sidebar
+# ---------------- Sidebar ----------------
 with st.sidebar:
-    st.header("ℹ️ About")
+    st.subheader("📘 Feature Overview")
     st.markdown("""
-    **Feature 1: Query Planning Agent**
-    
-    This system uses a multi-agent approach:
-    
-    1. 🧠 **Planning Agent** - Analyzes your question and creates a search strategy
-    2. 🔍 **Retrieval Agent** - Performs multiple targeted searches
-    3. ✍️ **Summarization Agent** - Generates comprehensive answer
-    4. ✅ **Verification Agent** - Ensures quality and accuracy
-    """)
-    
+** Query Planning Agent**
+
+Pipeline:
+1. 🧠 Plan the query  
+2. 🔍 Retrieve per sub-question  
+3. ✍️ Summarize  
+4. ✅ Verify  
+""")
+
     st.divider()
-    
-    # API Health Check
-    st.subheader("🔧 System Status")
+
+    st.subheader("🔧 Backend Status")
     try:
-        response = requests.get(f"{API_URL}/health", timeout=2)
-        if response.status_code == 200:
-            health = response.json()
-            st.success("✅ API Connected")
-            st.metric("Documents", health.get("documents_loaded", "N/A"))
+        r = requests.get(f"{API_URL}/health", timeout=5)
+        
+        if r.status_code == 200:
+            health = r.json()
+            st.success("API Connected")
         else:
-            st.error("❌ API Error")
+            st.warning("API reachable but unhealthy")
     except:
-        st.error("❌ API Offline")
-        st.info("Make sure backend is running:\n```\nuvicorn src.app.api:app --reload\n```")
-    
+        st.error("API Offline")
+
     st.divider()
-    
-    # Example Questions
+
     st.subheader("💡 Example Questions")
-    example_questions = [
+    examples = [
         "What are vector databases?",
-        "How do vector databases compare to traditional databases?",
-        "What are the advantages of vector databases and how do they handle scalability?",
-        "Explain HNSW indexing in vector databases",
-        "What are the main applications of vector databases in machine learning?"
+        "Vector databases vs relational databases",
+        "Advantages of vector databases and scalability"
     ]
-    
-    for i, eq in enumerate(example_questions):
-        if st.button(f"📝 {eq[:40]}...", key=f"example_{i}", use_container_width=True):
-            st.session_state.question = eq
+    for q in examples:
+        if st.button(q, use_container_width=True):
+            st.session_state.question = q
 
-# Main content
-st.divider()
-
-# Question input
+# ---------------- Input ----------------
 question = st.text_area(
     "❓ Ask a Question",
     value=st.session_state.get("question", ""),
-    height=100,
-    placeholder="Enter your question here... (e.g., What are the advantages of vector databases compared to traditional databases?)",
-    key="question_input"
+    height=90
 )
 
-# Update session state
-if question:
-    st.session_state.question = question
+if st.button("🚀 Run Query", type="primary"):
+    if not question.strip():
+        st.warning("Please enter a question.")
+        st.stop()
 
-# Submit button
-col1, col2, col3 = st.columns([1, 1, 1])
-with col2:
-    submit_button = st.button("🚀 Generate Answer", type="primary", use_container_width=True)
+    with st.spinner("Running multi-agent pipeline..."):
+        start = time.time()
+        res = requests.post(
+            f"{API_URL}/qa",
+            json={"question": question},
+            timeout=60
+        )
+        elapsed = time.time() - start
 
-# Process question
-if submit_button and question:
-    with st.spinner("🔄 Processing your question through the multi-agent pipeline..."):
-        try:
-            # Call API
-            response = requests.post(
-                f"{API_URL}/qa",
-                json={"question": question},
-                timeout=30
+    if res.status_code != 200:
+        st.error("API Error")
+        st.code(res.text)
+        st.stop()
+
+    data = res.json()
+    st.success(f"Completed in {elapsed:.1f}s")
+
+    # ---------------- Answer ----------------
+    st.markdown("### ✅ Final Answer")
+    st.markdown(
+        f'<div class="box answer">{data.get("answer","No answer")}</div>',
+        unsafe_allow_html=True
+    )
+
+    # ---------------- Planning ----------------
+    st.markdown("### 🧠 Query Planning")
+
+    if data.get("plan"):
+        st.markdown(
+            f'<div class="box plan">{data["plan"]}</div>',
+            unsafe_allow_html=True
+        )
+    else:
+        st.info("Planner not triggered")
+
+    if data.get("sub_questions"):
+        st.markdown("#### 🔍 Decomposed Sub-Questions")
+        for i, sq in enumerate(data["sub_questions"], 1):
+            st.markdown(
+                f'<div class="box subq"><b>{i}.</b> {sq}</div>',
+                unsafe_allow_html=True
             )
-            
-            if response.status_code == 200:
-                result = response.json()
-                
-                # Display results in tabs
-                tab1, tab2, tab3, tab4 = st.tabs(["📊 Overview", "🧠 Planning", "🔍 Context", "📄 Full Response"])
-                
-                with tab1:
-                    st.subheader("📊 Query Processing Overview")
-                    
-                    # Metrics
-                    col1, col2, col3 = st.columns(3)
-                    
-                    with col1:
-                        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-                        st.metric("Sub-Questions Generated", len(result.get("sub_questions", [])))
-                        st.markdown('</div>', unsafe_allow_html=True)
-                    
-                    with col2:
-                        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-                        st.metric("Retrieval Calls", len(result.get("sub_questions", [])) + 1)
-                        st.markdown('</div>', unsafe_allow_html=True)
-                    
-                    with col3:
-                        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-                        answer_length = len(result.get("answer", "").split())
-                        st.metric("Answer Length", f"{answer_length} words")
-                        st.markdown('</div>', unsafe_allow_html=True)
-                    
-                    st.divider()
-                    
-                    # Final Answer
-                    st.markdown("### ✅ Final Answer")
-                    st.markdown(f'<div class="answer-box">{result.get("answer", "No answer generated")}</div>', unsafe_allow_html=True)
-                
-                with tab2:
-                    st.subheader("🧠 Query Planning & Decomposition")
-                    
-                    # Search Plan
-                    if result.get("plan"):
-                        st.markdown("#### 📋 Search Strategy")
-                        st.markdown(f'<div class="plan-box">{result["plan"]}</div>', unsafe_allow_html=True)
-                    
-                    # Sub-questions
-                    if result.get("sub_questions"):
-                        st.markdown("#### 🔍 Decomposed Sub-Questions")
-                        st.markdown("The planning agent broke your complex question into these focused searches:")
-                        
-                        for i, sq in enumerate(result["sub_questions"], 1):
-                            st.markdown(f'<div class="sub-question"><strong>Sub-Question {i}:</strong> {sq}</div>', unsafe_allow_html=True)
-                    
-                    # Pipeline visualization
-                    st.markdown("#### 🔄 Processing Pipeline")
-                    st.markdown("""
-```
-                    📥 User Question
-                        ↓
-                    🧠 Planning Agent (creates search plan)
-                        ↓
-                    🔍 Retrieval Agent (multiple targeted searches)
-                        ↓
-                    ✍️ Summarization Agent (generates answer)
-                        ↓
-                    ✅ Verification Agent (ensures quality)
-                        ↓
-                    📤 Final Answer
-```
-                    """)
-                
-                with tab3:
-                    st.subheader("🔍 Retrieved Context")
-                    
-                    if result.get("context"):
-                        st.markdown("#### 📚 Documents Retrieved")
-                        st.markdown("These are the document chunks retrieved to answer your question:")
-                        st.markdown(f'<div class="context-box">{result["context"]}</div>', unsafe_allow_html=True)
-                        
-                        # Context stats
-                        context_length = len(result["context"].split())
-                        num_chunks = result["context"].count("[C")
-                        
-                        col1, col2 = st.columns(2)
-                        with col1:
-                            st.metric("Total Context Words", context_length)
-                        with col2:
-                            st.metric("Document Chunks", num_chunks)
-                    else:
-                        st.info("No context available")
-                
-                with tab4:
-                    st.subheader("📄 Complete API Response")
-                    st.json(result)
-                
-                # Success message
-                st.success("✅ Question processed successfully!")
-                
-            else:
-                st.error(f"❌ API Error: {response.status_code}")
-                st.code(response.text)
-                
-        except requests.exceptions.Timeout:
-            st.error("⏱️ Request timeout. The query might be too complex or the API is slow.")
-        except requests.exceptions.ConnectionError:
-            st.error("🔌 Cannot connect to API. Make sure the backend is running on http://localhost:8000")
-        except Exception as e:
-            st.error(f"❌ Error: {str(e)}")
 
-# Footer
-st.divider()
-st.markdown("""
-<div style='text-align: center; color: #666; padding: 2rem;'>
-    <p><strong>IKMS Query Planner</strong> - Feature 1: Query Planning & Decomposition Agent</p>
-    <p>Multi-Agent RAG System with Intelligent Search Strategy</p>
-</div>
-""", unsafe_allow_html=True)
+    # ---------------- Context ----------------
+    if data.get("context"):
+        with st.expander("📚 Retrieved Context"):
+            st.text(data["context"])
+
+    # ---------------- Raw JSON ----------------
+    with st.expander("📄 API Response"):
+        st.json(data)
+
+# ---------------- Footer ----------------
+st.markdown(
+    "<center style='color:#888'>IKMS • Query Planning & Decomposition</center>",
+    unsafe_allow_html=True
+)

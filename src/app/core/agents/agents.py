@@ -156,7 +156,7 @@ from .prompts import (
 from .tools import retrieval_tool
 
 
-# Initialize Gemini LLMs (FREE tier)
+# Initialize Gemini LLMs 
 planner_llm = ChatGoogleGenerativeAI(
     model="gemini-2.5-flash",
     temperature=0,
@@ -254,18 +254,80 @@ def summarization_node(state: QAState) -> dict:
     return {"answer": answer}
 
 
+# def verification_node(state: QAState) -> dict:
+#     """Verification Agent: Validate answer quality."""
+#     question = state["question"]
+#     answer = state.get("answer", "")
+#     context = state.get("context", "")
+    
+#     print(f"\n✅ VERIFICATION AGENT: Checking quality...")
+    
+#     prompt = f"{VERIFICATION_PROMPT}\n\nQuestion: {question}\n\nAnswer: {answer}\n\nContext: {context}"
+#     response = verification_llm.invoke([HumanMessage(content=prompt)])
+    
+#     verified_answer = response.content
+#     print(f"Verification complete.\n")
+    
+#     return {"answer": verified_answer}
+
 def verification_node(state: QAState) -> dict:
-    """Verification Agent: Validate answer quality."""
+    """
+    Verification Agent: Validates and refines the answer.
+    Returns the final polished answer.
+    """
     question = state["question"]
     answer = state.get("answer", "")
     context = state.get("context", "")
     
-    print(f"\n✅ VERIFICATION AGENT: Checking quality...")
+    print(f"\n✅ VERIFICATION AGENT: Reviewing answer quality...")
     
-    prompt = f"{VERIFICATION_PROMPT}\n\nQuestion: {question}\n\nAnswer: {answer}\n\nContext: {context}"
-    response = verification_llm.invoke([HumanMessage(content=prompt)])
+    # Improved prompt that focuses on output quality
+    verification_prompt = f"""You are a Quality Verification Agent. Review the answer below and return the FINAL ANSWER.
+
+Question:
+{question}
+
+Current Answer:
+{answer}
+
+Available Context:
+{context[:500]}...
+
+Your task:
+1. If the answer is accurate and complete → Return it EXACTLY as written
+2. If the answer needs improvement → Return an IMPROVED version
+3. Remove any meta-commentary like "based on the context"
+4. Ensure the answer directly addresses the question
+
+IMPORTANT: Return ONLY the final answer text. Do NOT include:
+- Your analysis or reasoning
+- Phrases like "The answer is accurate" or "Return as-is"
+- Meta-commentary about the answer quality
+
+Final Answer:"""
     
-    verified_answer = response.content
-    print(f"Verification complete.\n")
+    response = verification_llm.invoke([HumanMessage(content=verification_prompt)])
+    verified_answer = response.content.strip()
+    
+    # Safety check: detect if LLM returned analysis instead of answer
+    meta_phrases = [
+        "the answer is",
+        "return the answer",
+        "as-is",
+        "accurate and complete",
+        "well-structured",
+        "directly supported"
+    ]
+    
+    # If response contains meta-commentary, use original answer
+    if any(phrase in verified_answer.lower() for phrase in meta_phrases):
+        print("⚠️  Verification returned analysis - using original answer")
+        verified_answer = answer
+    else:
+        print(f"✅ Verification complete - {len(verified_answer)} characters")
+    
+    print()
     
     return {"answer": verified_answer}
+
+

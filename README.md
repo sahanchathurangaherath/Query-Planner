@@ -77,22 +77,7 @@ Final Answer
 
 ---
 
-## 💰 Cost: 100% FREE
 
-| Component | Provider | Cost |
-|-----------|----------|------|
-| LLM (Planning/Summarization/Verification) | Google Gemini Free Tier | **$0.00** |
-| Embeddings | Google Gemini Free Tier | **$0.00** |
-| Vector Database | Pinecone Free Tier | **$0.00** |
-| **Total** | | **$0.00** ✅ |
-
-**Gemini Free Tier Limits:**
-- ✅ 15 requests per minute
-- ✅ 1,500 requests per day
-- ✅ 1 million tokens per minute
-- ✅ No credit card required
-
----
 
 ## 📋 Prerequisites
 
@@ -159,10 +144,10 @@ touch .env
 
 Add your API keys:
 ```env
-# Google Gemini API Key (FREE)
+# Google Gemini API Key 
 GOOGLE_API_KEY=your-gemini-api-key-here
 
-# Pinecone Configuration (FREE)
+# Pinecone Configuration 
 PINECONE_API_KEY=your-pinecone-api-key-here
 PINECONE_INDEX_NAME=ikms-rag
 ```
@@ -193,7 +178,7 @@ PDF: documents/research_paper.pdf
 ✅ Created 87 chunks
 🔄 Indexing into Pinecone...
 ✅ SUCCESS! Indexed 87 chunks
-💰 Cost: $0.00 (Gemini embeddings are free!)
+
 ```
 
 ### 7. Start Backend

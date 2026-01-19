@@ -17,25 +17,7 @@ An intelligent **Query Planning Agent** that:
 4. ✅ Performs multiple targeted retrieval calls
 5. ✅ Aggregates results for comprehensive answers
 
-### Example
 
-**Question:**
-> "How do vector databases compare to traditional databases and how do they handle scalability?"
-
-**Without Feature 1:**
-- 1 generic search with entire question
-- May miss specific details about advantages OR scalability
-- Incomplete answer
-
-**With Feature 1:**
-- Creates search plan
-- Generates 4 focused sub-questions:
-  - "vector database advantages"
-  - "vector database vs traditional database"
-  - "vector database scalability"
-  - "traditional database comparison"
-- 5 total searches (1 original + 4 sub-questions)
-- ✅ Comprehensive, detailed answer
 
 ---
 

@@ -27,7 +27,7 @@ An intelligent **Query Planning Agent** that:
 ```
 User Question
      ↓
-🧠 Planning Agent (Gemini 1.5 Flash)
+🧠 Planning Agent 
      ├─ Analyzes question complexity
      ├─ Creates search strategy
      └─ Generates sub-questions

@@ -97,7 +97,7 @@ pip install -r requirements.txt
 
 ### 4. Get API Keys
 
-#### Google Gemini API Key (FREE):
+#### Google Gemini API Key :
 1. Go to: https://aistudio.google.com/app/apikey
 2. Click "Create API Key"
 3. Copy your key (starts with `AIza...`)

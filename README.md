@@ -479,7 +479,6 @@ Potential improvements beyond Feature 1:
 - **Feature 4**: Evidence-aware answers with chunk citations
 - **Feature 5**: Conversational multi-turn QA with memory
 - Query history tracking
-- User feedback collection
 - A/B testing different planning strategies
 
 ---

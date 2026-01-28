@@ -11,7 +11,7 @@ API_URL = "http://localhost:8000"
 
 #  Page Config 
 st.set_page_config(
-    page_title="IKMS Query Planner",
+    page_title=" Query Planner",
     page_icon="🧠",
     layout="wide"
 )
@@ -161,3 +161,4 @@ st.markdown(
     "<center style='color:#888'>IKMS • Query Planning & Decomposition</center>",
     unsafe_allow_html=True
 )
+

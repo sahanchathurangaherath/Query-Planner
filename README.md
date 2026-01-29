@@ -318,13 +318,6 @@ ikms-query-planner/
 
 ### Custom PDF Processing
 
-**Index Multiple PDFs:**
-```bash
-# Put all PDFs in documents/ folder
-# Then index them all
-for file in documents/*.pdf; do
-    python scripts/setup_pinecone.py "$file"
-done
 ```
 
 **Clear Pinecone Index:**

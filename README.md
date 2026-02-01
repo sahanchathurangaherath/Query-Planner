@@ -64,7 +64,7 @@ Final Answer
 ## 📋 Prerequisites
 
 - Python 3.10+
-- Google Gemini API key 
+-  Gemini API key 
 - Pinecone API key 
 
 ---

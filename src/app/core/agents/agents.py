@@ -109,21 +109,7 @@ def summarization_node(state: QAState) -> dict:
     return {"answer": answer}
 
 
-# def verification_node(state: QAState) -> dict:
-#     """Verification Agent: Validate answer quality."""
-#     question = state["question"]
-#     answer = state.get("answer", "")
-#     context = state.get("context", "")
-    
-#     print(f"\n✅ VERIFICATION AGENT: Checking quality...")
-    
-#     prompt = f"{VERIFICATION_PROMPT}\n\nQuestion: {question}\n\nAnswer: {answer}\n\nContext: {context}"
-#     response = verification_llm.invoke([HumanMessage(content=prompt)])
-    
-#     verified_answer = response.content
-#     print(f"Verification complete.\n")
-    
-#     return {"answer": verified_answer}
+}
 
 def verification_node(state: QAState) -> dict:
     """
@@ -134,7 +120,7 @@ def verification_node(state: QAState) -> dict:
     answer = state.get("answer", "")
     context = state.get("context", "")
     
-    print(f"\n✅ VERIFICATION AGENT: Reviewing answer quality...")
+    print(f"\n VERIFICATION AGENT: Reviewing answer quality...")
     
     # Improved prompt that focuses on output quality
     verification_prompt = f"""You are a Quality Verification Agent. Review the answer below and return the FINAL ANSWER.
@@ -176,13 +162,14 @@ Final Answer:"""
     
     # If response contains meta-commentary, use original answer
     if any(phrase in verified_answer.lower() for phrase in meta_phrases):
-        print("⚠️  Verification returned analysis - using original answer")
+        print(" Verification returned analysis - using original answer")
         verified_answer = answer
     else:
-        print(f"✅ Verification complete - {len(verified_answer)} characters")
+        print(f" Verification complete - {len(verified_answer)} characters")
     
     print()
     
     return {"answer": verified_answer}
+
 
 

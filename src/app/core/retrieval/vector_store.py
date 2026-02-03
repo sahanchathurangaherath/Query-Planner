@@ -64,7 +64,7 @@ class PineconeVectorStoreManager:
     
     def add_documents(self, documents: List[Document]):
         """
-        Add documents to Pinecone (with FREE Gemini embeddings).
+        Add documents to Pinecone 
         
         Args:
             documents: List of documents to index
@@ -91,4 +91,5 @@ vector_store_manager = PineconeVectorStoreManager()
 
 print("="*60)
 print(" System ready for queries!")
+
 print("="*60 + "\n")

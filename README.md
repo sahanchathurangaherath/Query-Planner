@@ -49,8 +49,8 @@ Final Answer
 
 ### Technology Stack
 
-- **LLM**: Google Gemini 1.5 Flash (FREE tier)
-- **Embeddings**: Google Gemini text-embedding-004 (FREE)
+- **LLM**: Google Gemini 1.5 Flash 
+- **Embeddings**: Google Gemini text-embedding-004 
 - **Vector Database**: Pinecone (Cloud)
 - **Framework**: LangChain v1.0 + LangGraph
 - **Backend**: FastAPI

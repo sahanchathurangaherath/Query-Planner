@@ -388,7 +388,7 @@ python test_pdf.py documents/your_document.pdf
 ### "Gemini API quota exceeded"
 - Check your usage at: https://aistudio.google.com/
 - Free tier: 1,500 requests/day
-- Wait 24 hours for reset, or upgrade to paid tier
+
 
 ### "Pinecone index not found"
 ```bash

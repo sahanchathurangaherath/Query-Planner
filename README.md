@@ -1,6 +1,6 @@
 #  Query Planner -  Query Planning & Decomposition Agent
 
-An intelligent Multi-Agent RAG system that uses AI-powered query planning to break down complex questions into focused sub-queries for comprehensive answers. Built with Google Gemini (free tier) and Pinecone vector database.
+An intelligent Multi-Agent RAG system that uses AI-powered query planning to break down complex questions into focused sub-queries for comprehensive answers. Built  Pinecone vector database.
 
 ---
 

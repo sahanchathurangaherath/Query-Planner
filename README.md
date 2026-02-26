@@ -23,7 +23,7 @@ An intelligent **Query Planning Agent** that:
 
 ## 🏗️ Architecture
 
-### Multi-Agent Pipeline
+### Multi-Agent
 ```
 User Question
      ↓

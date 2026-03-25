@@ -1,0 +1,22 @@
+# Core Dependencies
+fastapi
+uvicorn[standard]
+pydantic
+
+# LangChain & AI
+langchain
+langchain-google-genai
+langchain-community
+langgraph
+langchain-pinecone
+
+# Vector Store
+pinecone
+
+# Document Processing
+pypdf
+python-multipart
+
+# Utilities
+python-dotenv
+requests

@@ -7,7 +7,7 @@ import os
 load_dotenv()
 
 def clear_index():
-    """Delete all vectors from Pinecone index."""
+   
     
     index_name = os.getenv("PINECONE_INDEX_NAME", "ikms-rag")
     
